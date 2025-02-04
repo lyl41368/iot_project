@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 services:
   emqx:
     image: emqx:5.8
@@ -11,6 +11,8 @@ services:
       - ./emqx/log:/opt/emqx/log
       - ./emqx/data:/opt/emqx/data
     restart: always
+    networks:
+      - iot-network
 
   nginx:  
     image: nginx:1.27
@@ -24,6 +26,8 @@ services:
       - ./nginx/html:/usr/share/nginx/html
       - ./nginx/log:/var/log/nginx
     restart: always
+    networks:
+      - iot-network
 
   mysql:
     image: mysql:8.0
@@ -40,7 +44,9 @@ services:
       MYSQL_USER: lyl41368
       MYSQL_PASSWORD: .Lyl41368
     restart: always
- 
+    networks:
+      - iot-network
+
   mongodb:
     image: mongo:4.4
     container_name: mongodb
@@ -56,3 +62,26 @@ services:
       MONGO_INITDB_USERNAME: lyl41368
       MONGO_INITDB_PASSWORD: .Lyl41368
     restart: always
+    networks:
+      - iot-network
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: iot-backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - MQTT_BROKER_URL=tcp://emqx:1883
+    depends_on:
+      - mongodb
+      - emqx
+    networks:
+      - iot-network
+
+networks:
+  iot-network:
+    driver: bridge

@@ -51,6 +51,22 @@ public class ModbusQueryService {
         }
     }
 
+    /**
+     * 查询室内环境（温度和湿度）
+     * 发送Modbus指令：02 04 00 00 00 02 71 F8
+     * - 02: 设备地址（室内环境传感器）
+     * - 04: 功能码(读输入寄存器)
+     * - 0000: 起始寄存器地址
+     * - 0002: 读取2个寄存器（温度和湿度）
+     * - 71F8: CRC校验
+     * 
+     * 响应数据格式：02 04 04 XXXX YYYY CRC
+     * - 02: 设备地址
+     * - 04: 功能码
+     * - 04: 字节数
+     * - XXXX: 温度值（需除以10）
+     * - YYYY: 湿度值（需除以10）
+     */
     @Scheduled(fixedRateString = "${mqtt.query.room.interval}")
     public void queryRoomEnvironment() {
         try {

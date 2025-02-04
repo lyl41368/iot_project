@@ -27,6 +27,14 @@ public class MqttConfiguration {
 
     /**
      * 创建MQTT客户端
+     * 配置说明：
+     * 1. 客户端ID: mqtt-temp-monitor（固定值）
+     * 2. 连接选项:
+     *    - 自动重连: 网络异常断开后自动重新连接
+     *    - 清除会话: 每次连接都清除之前的会话状态
+     * 
+     * @return 配置完成的MQTT客户端实例
+     * @throws MqttException 连接MQTT服务器失败时抛出
      */
     @Bean
     public MqttClient mqttClient() throws MqttException {

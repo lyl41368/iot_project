@@ -30,7 +30,12 @@ public class MqttMessageHandler implements MqttCallback {
     private String topic;
 
     /**
-     * 服务启动时初始化MQTT订阅
+     * 初始化MQTT订阅
+     * 在服务启动时自动执行：
+     * 1. 设置消息回调处理
+     * 2. 订阅指定主题
+     * 
+     * @throws MqttException MQTT连接或订阅异常
      */
     @PostConstruct
     public void init() throws MqttException {
@@ -97,6 +102,14 @@ public class MqttMessageHandler implements MqttCallback {
 
     /**
      * 将字节数组转换为十六进制字符串
+     * 用于将接收到的Modbus响应数据转换为可读格式
+     * 
+     * 示例：
+     * 输入: [0x01, 0x03, 0x04, 0x01, 0x92, 0x01, 0x4C]
+     * 输出: "0103040192014C"
+     * 
+     * @param bytes 需要转换的字节数组
+     * @return 十六进制字符串（大写）
      */
     private String bytesToHex(byte[] bytes) {
         StringBuilder result = new StringBuilder();
@@ -108,6 +121,13 @@ public class MqttMessageHandler implements MqttCallback {
 
     /**
      * 保存温度数据到MongoDB
+     * 数据格式：
+     * {
+     *   "type": "inlet/outlet/room",  // 温度点类型
+     *   "temperature": xx.x,          // 温度值（保留一位小数）
+     *   "timestamp": ISODate()        // 存储时间（北京时间）
+     * }
+     * 
      * @param type 温度类型：inlet(进水)/outlet(回水)/room(室温)
      * @param temperature 温度值，精确到小数点后一位
      */
@@ -123,6 +143,13 @@ public class MqttMessageHandler implements MqttCallback {
 
     /**
      * 保存湿度数据到MongoDB
+     * 数据格式：
+     * {
+     *   "type": "room",              // 固定为room类型
+     *   "humidity": xx.x,            // 湿度值（保留一位小数）
+     *   "timestamp": ISODate()       // 存储时间（北京时间）
+     * }
+     * 
      * @param humidity 湿度值，精确到小数点后一位
      */
     private void saveHumidity(double humidity) {
