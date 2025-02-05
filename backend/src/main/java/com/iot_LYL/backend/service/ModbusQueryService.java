@@ -47,8 +47,8 @@ public class ModbusQueryService {
         try {
             MqttMessage message = new MqttMessage(HEATER_QUERY);
             mqttClient.publish("D4AD20AB8F7E/sub", message);
-            System.out.println("Sent heater query command");
             System.out.println("Heater query interval: " + heaterQueryInterval);
+            System.out.println("Sent heater query command");            
         } catch (Exception e) {
             System.err.println("Error querying heater temperature: " + e.getMessage());
         }
@@ -75,8 +75,9 @@ public class ModbusQueryService {
         try {
             MqttMessage message = new MqttMessage(ROOM_QUERY);
             mqttClient.publish("D4AD20AB8F7E/sub", message);
-            System.out.println("Sent room environment query command");
             System.out.println("Room query interval: " + roomQueryInterval);
+            System.out.println("Sent room environment query command");
+            
         } catch (Exception e) {
             System.err.println("Error querying room environment: " + e.getMessage());
         }
