@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * Modbus查询服务
  * 负责定时发送Modbus查询指令到设备
@@ -46,6 +48,7 @@ public class ModbusQueryService {
             MqttMessage message = new MqttMessage(HEATER_QUERY);
             mqttClient.publish("D4AD20AB8F7E/sub", message);
             System.out.println("Sent heater query command");
+            System.out.println("Heater query interval: " + heaterQueryInterval);
         } catch (Exception e) {
             System.err.println("Error querying heater temperature: " + e.getMessage());
         }
@@ -73,8 +76,16 @@ public class ModbusQueryService {
             MqttMessage message = new MqttMessage(ROOM_QUERY);
             mqttClient.publish("D4AD20AB8F7E/sub", message);
             System.out.println("Sent room environment query command");
+            System.out.println("Room query interval: " + roomQueryInterval);
         } catch (Exception e) {
             System.err.println("Error querying room environment: " + e.getMessage());
         }
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("ModbusQueryService initialized with intervals:");
+        System.out.println("Heater query interval: " + heaterQueryInterval);
+        System.out.println("Room query interval: " + roomQueryInterval);
     }
 } 

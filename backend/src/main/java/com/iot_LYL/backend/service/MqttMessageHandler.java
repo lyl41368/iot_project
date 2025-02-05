@@ -39,6 +39,8 @@ public class MqttMessageHandler implements MqttCallback {
      */
     @PostConstruct
     public void init() throws MqttException {
+        System.out.println("MQTT Client connecting to: " + mqttClient.getServerURI());
+        System.out.println("Subscribing to topic: " + topic);
         mqttClient.setCallback(this);
         mqttClient.subscribe(topic);
     }
