@@ -86,7 +86,7 @@ public class MqttMessageHandler implements MqttCallback {
                 saveHumidity(humidity);
                 
                 // 添加日志输出，帮助调试
-                System.out.println("Saving humidity: " + humidity);
+                System.out.println("Saving humidity 10s: " + humidity);
                 System.out.println("Saving temperature: " + temp);
             }
             
